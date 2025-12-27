@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Register - Modern Portal</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* ------------------- GLOBAL RESET ------------------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 600% 600%;
+        animation: gradientShift 20s ease infinite;
+        overflow: hidden;
+        position: relative;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* ------------------- FLOATING SHAPES ------------------- */
+    .bg-shape {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(8px);
+        animation: float 25s infinite ease-in-out;
+    }
+    .shape1 { width: 450px; height: 450px; top: -200px; left: -200px; }
+    .shape2 { width: 350px; height: 350px; bottom: -150px; right: -150px; animation-delay: 7s; }
+    .shape3 { width: 300px; height: 300px; top: 40%; left: -120px; animation-delay: 14s; }
+    .shape4 { width: 200px; height: 200px; top: 15%; right: 10%; animation-delay: 21s; }
+
+    @keyframes float {
+        0%, 100% { transform: translate(0,0) scale(1); }
+        50% { transform: translate(40px,-40px) scale(1.05); }
+    }
+
+    /* ------------------- PARTICLES ------------------- */
+    .particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        animation: particleFloat 15s infinite linear;
+    }
+
+    @keyframes particleFloat {
+        from { transform: translateY(100vh); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        to { transform: translateY(-100vh); opacity: 0; }
+    }
+
+    /* ------------------- CONTAINER ------------------- */
+    .register-container {
+        background: rgba(255, 255, 255, 0.93);
+        backdrop-filter: blur(15px);
+        border-radius: 24px;
+        padding: 40px;
+        width: 90%;
+        max-width: 520px;
+        box-shadow: 0 25px 80px rgba(0,0,0,0.25);
+        animation: slideUp 0.8s ease-out;
+        position: relative;
+        z-index: 5;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(40px) scale(0.95); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ------------------- HEADER ------------------- */
+    .register-header { text-align: center; margin-bottom: 30px; }
+    .logo {
+        width: 90px; height: 90px; border-radius: 24px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        display: flex; align-items: center; justify-content: center;
+        animation: pulse 2s infinite;
+    }
+    .logo i { font-size: 42px; color: #fff; }
+
+    @keyframes pulse {
+        0%,100% { transform: scale(1); }
+        50%     { transform: scale(1.05); }
+    }
+
+    h1 {
+        font-size: 32px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* ------------------- FORM ------------------- */
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #4a5568;
+    }
+
+    .input-wrapper {
+        position: relative;
+        margin-bottom: 18px;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0aec0;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: .3s;
+    }
+
+    input:focus, select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+        transform: translateY(-2px);
+        outline: none;
+    }
+
+    /* ------------------- BUTTON ------------------- */
+    .register-btn {
+        width: 100%; padding: 15px;
+        border: none; border-radius: 12px;
+        font-size: 16px; font-weight: 700;
+        cursor: pointer;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        color: white;
+        box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        transition: .3s;
+    }
+
+    .register-btn:hover { transform: translateY(-3px); }
+
+    .login-link {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .login-link a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- BACKGROUND SHAPES -->
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+<div class="bg-shape shape3"></div>
+<div class="bg-shape shape4"></div>
+
+<!-- PARTICLES -->
+<div class="particles" id="particles"></div>
+
+<div class="register-container">
+
+  <div class="register-header">
+    <div class="logo"><i class="fas fa-user-plus"></i></div>
+    <h1>Create Account</h1>
+  </div>
+
+  <form th:action="@{/users/register}" method="post" th:object="${registerRequest}">
+
+    <label>Username</label>
+    <div class="input-wrapper">
+      <i class="fas fa-user"></i>
+      <input type="text" th:field="*{username}" required>
+    </div>
+
+    <label>Email</label>
+    <div class="input-wrapper">
+      <i class="fas fa-envelope"></i>
+      <input type="email" th:field="*{email}" required>
+    </div>
+
+    <label>Password</label>
+    <div class="input-wrapper">
+      <i class="fas fa-lock"></i>
+      <input type="password" th:field="*{password}" required>
+    </div>
+
+    <label>Account Type</label>
+    <div class="input-wrapper">
+      <i class="fas fa-user-tag"></i>
+      <select th:field="*{role}">
+        <option value="DONOR">🤝 Donor</option>
+        <option value="RECEIVER">🙏 Receiver</option>
+      </select>
+    </div>
+
+    <label>Location</label>
+    <div class="input-wrapper">
+      <i class="fas fa-map-marker-alt"></i>
+      <input type="text" th:field="*{location}" required>
+    </div>
+
+    <label>Phone</label>
+    <div class="input-wrapper">
+      <i class="fas fa-phone"></i>
+      <input type="text" th:field="*{phoneNumber}" required>
+    </div>
+
+    <button class="register-btn" type="submit">Create Account</button>
+  </form>
+
+  <div class="login-link">
+    Already have an account?
+    <a href="/users/login">Login here</a>
+  </div>
+
+</div>
+
+<script>
+  // Generate floating particles
+  function createParticles() {
+      const container = document.getElementById("particles");
+      for (let i = 0; i < 20; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 10 + "s";
+          particle.style.animationDuration = (10 + Math.random() * 10) + "s";
+          container.appendChild(particle);
+      }
+  }
+  createParticles();
+</script>
+
+</body>
+</html>

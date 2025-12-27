@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Browse Donations</title>
+</head>
+<body>
+<h1>Browse Donations</h1>
+
+<form th:action="@{/donations/browse}" method="get">
+  <input type="text" name="query" placeholder="Search by item name"/>
+  <select name="categoryId">
+    <option value="">All Categories</option>
+    <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+  </select>
+  <button type="submit">Search</button>
+</form>
+
+<table border="1">
+  <thead>
+  <tr>
+    <th>Item</th>
+    <th>Category</th>
+    <th>Quantity</th>
+    <th>Location</th>
+    <th>Status</th>
+    <th>Action</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="donation : ${donations}">
+    <td th:text="${donation.itemName}"></td>
+    <td th:text="${donation.category.name}"></td>
+    <td th:text="${donation.quantity}"></td>
+    <td th:text="${donation.location}"></td>
+    <td th:text="${donation.status}"></td>
+    <td>
+      <form th:action="@{/donations/{id}/request(id=${donation.id})}" method="post">
+        <button type="submit" th:if="${donation.status.name() == 'AVAILABLE'}">Request</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

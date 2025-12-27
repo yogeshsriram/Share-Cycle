@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Donations by Category</title>
+</head>
+<body>
+<h2>Donations in Category</h2>
+<table border="1">
+  <tr>
+    <th>Item</th>
+    <th>Description</th>
+    <th>Quantity</th>
+    <th>Location</th>
+    <th>Status</th>
+  </tr>
+  <tr th:each="donation : ${donations}">
+    <td th:text="${donation.itemName}"></td>
+    <td th:text="${donation.description}"></td>
+    <td th:text="${donation.quantity}"></td>
+    <td th:text="${donation.location}"></td>
+    <td th:text="${donation.status}"></td>
+  </tr>
+</table>
+<h2>Donations in Category</h2>
+
+<form th:action="@{/receiver/donations/category/{id}/search(id=${#httpServletRequest.getRequestURI().split('/')[4]})}" method="get">
+  <input type="text" name="query" placeholder="Search items..." />
+  <button type="submit">Search</button>
+</form>
+
+<table border="1">
+  <tr>
+    <th>Item</th>
+    <th>Description</th>
+    <th>Quantity</th>
+    <th>Location</th>
+    <th>Status</th>
+  </tr>
+  <tr th:each="donation : ${donations}">
+    <td th:text="${donation.itemName}"></td>
+    <td th:text="${donation.description}"></td>
+    <td th:text="${donation.quantity}"></td>
+    <td th:text="${donation.location}"></td>
+    <td th:text="${donation.status}"></td>
+  </tr>
+</table>
+
+</body>
+</html>

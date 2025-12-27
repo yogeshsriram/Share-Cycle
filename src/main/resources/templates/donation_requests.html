@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Donation Requests</title>
+</head>
+<body>
+<h2>Requests for Your Donation</h2>
+
+<table border="1">
+  <tr>
+    <th>Message</th>
+    <th>Actions</th>
+  </tr>
+  <tr th:each="req : ${requests}">
+    <td>
+      You got a request from
+      <span th:text="${req.receiver.username}"></span>
+      for the product
+      <span th:text="${req.donation.itemName}"></span>.
+    </td>
+    <td>
+      <form th:action="@{/requests/accept/{id}(id=${req.id})}" method="post">
+        <button type="submit">Accept</button>
+      </form>
+      <form th:action="@{/requests/reject/{id}(id=${req.id})}" method="post">
+        <button type="submit">Reject</button>
+      </form>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

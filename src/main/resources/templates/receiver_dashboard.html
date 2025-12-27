@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Receiver Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ---------------- GLOBAL ---------------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 40px 0;
+            background: linear-gradient(-45deg,#ee7752,#e73c7e,#23a6d5,#23d5ab);
+            background-size: 600% 600%;
+            animation: bgShift 20s ease infinite;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes bgShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ---------------- SHAPES ---------------- */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            animation: float 22s infinite ease-in-out;
+        }
+
+        .shape1 { width: 420px; height: 420px; top: -160px; left: -160px; }
+        .shape2 { width: 350px; height: 350px; bottom: -150px; right: -130px; animation-delay: 7s; }
+        .shape3 { width: 260px; height: 260px; top: 50%; left: -120px; animation-delay: 13s; }
+        .shape4 { width: 200px; height: 200px; top: 15%; right: 10%; animation-delay: 20s; }
+
+        @keyframes float {
+            0%,100% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(40px,-40px) scale(1.05); }
+        }
+
+        /* ---------------- PARTICLES ---------------- */
+        .particles { position: absolute; width: 100%; height: 100%; overflow: hidden; pointer-events:none; }
+        .particle {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        @keyframes particleFloat {
+            from { transform: translateY(100vh); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            to { transform: translateY(-100vh); opacity: 0; }
+        }
+
+        /* ---------------- CONTAINER ---------------- */
+        .dashboard-container {
+            width: 92%;
+            max-width: 1100px;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.25);
+            animation: slideUp .7s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px) scale(0.95); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ---------------- HEADERS ---------------- */
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg,#667eea,#764ba2);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin: 25px 0 10px;
+            color: #4a5568;
+            font-weight: 700;
+        }
+
+        /* ---------------- SEARCH BAR ---------------- */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-input-wrapper i {
+            position: absolute;
+            top: 50%; left: 14px;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: .3s;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .search-btn {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .3s;
+            box-shadow: 0 8px 25px rgba(102,126,234,0.3);
+        }
+
+        .search-btn:hover { transform: translateY(-3px); }
+
+        /* ---------------- TABLE ---------------- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        th {
+            background: linear-gradient(135deg,#667eea,#764ba2);
+            padding: 12px;
+            color: white;
+            font-size: 16px;
+        }
+
+        td {
+            background: rgba(255,255,255,0.85);
+            padding: 12px;
+            color: #2d3748;
+            font-size: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover td {
+            background: rgba(102,126,234,0.1);
+        }
+
+        /* ---------------- ACTION BUTTON ---------------- */
+        .request-btn {
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg,#23a6d5,#23d5ab);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .request-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ---------------- MY REQUESTS LINK ---------------- */
+        .my-requests {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg,#667eea,#764ba2,#f093fb);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: .3s;
+            box-shadow: 0 8px 25px rgba(102,126,234,0.3);
+        }
+
+        .my-requests:hover {
+            transform: translateY(-3px);
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- BACKGROUND SHAPES -->
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+<div class="bg-shape shape3"></div>
+<div class="bg-shape shape4"></div>
+
+<!-- PARTICLES -->
+<div class="particles" id="particles"></div>
+
+<div class="dashboard-container">
+
+    <h1>Welcome Receiver</h1>
+
+    <!-- 🔎 Search Bar -->
+    <h2>Browse Donations</h2>
+    <form th:action="@{/donations/list}" method="get" class="search-bar">
+
+        <div class="search-input-wrapper">
+            <i class="fas fa-search"></i>
+            <input class="search-input" type="text" name="query" placeholder="Search donations...">
+        </div>
+
+        <button class="search-btn" type="submit">
+            <i class="fas fa-search"></i> Search
+        </button>
+    </form>
+
+    <!-- 📦 Donation Table -->
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+        <tr th:each="donation : ${donations}">
+            <td th:text="${donation.itemName}"></td>
+            <td th:text="${donation.description}"></td>
+            <td th:text="${donation.category.name}"></td>
+            <td th:text="${donation.location}"></td>
+            <td th:text="${donation.status}"></td>
+
+            <td>
+                <form th:action="@{/requests/create}" method="post">
+                    <input type="hidden" name="donationId" th:value="${donation.id}">
+                    <input type="hidden" name="receiverId" value="1"> <!-- Replace with logged-in user -->
+                    <button class="request-btn" type="submit">
+                        Request
+                    </button>
+                </form>
+            </td>
+
+        </tr>
+    </table>
+
+    <h2>My Requests</h2>
+    <a class="my-requests" th:href="@{/requests/my/{id}(id=1)}">
+        <i class="fas fa-list"></i> View My Requests
+    </a>
+
+</div>
+
+<script>
+    // Floating particles
+    function createParticles() {
+        const layer = document.getElementById("particles");
+        for (let i = 0; i < 20; i++) {
+            const p = document.createElement("div");
+            p.classList.add("particle");
+            p.style.left = Math.random() * 100 + "%";
+            p.style.animationDelay = Math.random() * 10 + "s";
+            p.style.animationDuration = (12 + Math.random() * 10) + "s";
+            layer.appendChild(p);
+        }
+    }
+    createParticles();
+</script>
+
+</body>
+</html>
